@@ -16,7 +16,7 @@ export default function RootLayout({
 		<html lang="en">
 			<body>
 				<Header />
-				{children}
+				<main className="flex-1">{children}</main>
 			</body>
 		</html>
 	);

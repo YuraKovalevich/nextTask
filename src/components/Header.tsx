@@ -10,7 +10,7 @@ const Header = () => {
 				<nav className="flex h-16 items-center justify-between">
 					<div className="flex items-center gap-8">
 						<Link
-							href="/public"
+							href="/"
 							className="flex items-center gap-2 text-2xl font-bold text-gray-900 transition-colors hover:text-indigo-600"
 						>
 							<span>Store</span>
