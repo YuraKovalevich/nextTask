@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 type Product = {
@@ -21,7 +20,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 		>
 			<div className="relative overflow-hidden bg-gray-100">
 				<div className="flex items-center justify-center">
-					<Image
+					<img
 						src={product.thumbnail}
 						alt={product.title}
 						className="w-64 h-64  group-hover:scale-110 transition-transform duration-500"

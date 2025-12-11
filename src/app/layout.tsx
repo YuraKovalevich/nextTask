@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/src/components/Header";
+import ReactQueryProvider from "@/src/components/ReactQueryProvider";
 
 export const metadata: Metadata = {
 	title: "Store",
@@ -9,14 +10,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
 	children,
-}: Readonly<{
+}: {
 	children: React.ReactNode;
-}>) {
+}) {
 	return (
 		<html lang="en">
 			<body>
 				<Header />
-				<main className="flex-1">{children}</main>
+				<ReactQueryProvider>
+					<main className="flex-1">{children}</main>
+				</ReactQueryProvider>
 			</body>
 		</html>
 	);

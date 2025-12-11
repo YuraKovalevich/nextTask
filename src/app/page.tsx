@@ -34,11 +34,12 @@ export default async function Home(props: Props) {
 
 	const res = await fetch(
 		`https://dummyjson.com/products?limit=${ITEMS_PER_PAGE}&skip=${skip}`,
-		{ cache: "no-store" },
+		{ next: { revalidate: 60 } },
 	);
 
-	if (!res.ok)
+	if (!res.ok) {
 		throw new Error(`Products fetch failed: ${res.status} ${res.statusText}`);
+	}
 
 	const data: ProductResponse = await res.json();
 	const products = data.products ?? [];
@@ -54,7 +55,7 @@ export default async function Home(props: Props) {
 
 			<section className="mb-8">
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-					{products.map((product) => (
+					{products.map((product: Product) => (
 						<ProductCard key={product.id} product={product} />
 					))}
 				</div>
