@@ -1,9 +1,17 @@
+"use client";
 import Link from "next/link";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa6";
 import { IoSearchOutline } from "react-icons/io5";
+import { useCartStore } from "@/src/app/store/useCartStore";
+import { useFavoriteStore } from "@/src/app/store/useFavoriteStore";
 
 const Header = () => {
+	const cartCount = useCartStore((state) =>
+		state.cart.reduce((accum, item) => accum + item.quantity, 0),
+	);
+	const favoritesCount = useFavoriteStore((state) => state.favorites.length);
+
 	return (
 		<header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
 			<div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -52,9 +60,11 @@ const Header = () => {
 							aria-label="Wishlist"
 						>
 							<FaHeart className="h-5 w-5 text-gray-600" />
-							<span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-indigo-100 text-xs font-medium text-indigo-600">
-								42
-							</span>
+							{favoritesCount !== 0 && (
+								<span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-indigo-100 text-xs font-medium text-indigo-600">
+									{favoritesCount}
+								</span>
+							)}
 						</Link>
 
 						<Link
@@ -63,9 +73,11 @@ const Header = () => {
 							aria-label="Shopping cart"
 						>
 							<FaShoppingCart className="h-5 w-5 text-gray-600" />
-							<span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-indigo-600 text-xs font-medium text-white">
-								42
-							</span>
+							{cartCount !== 0 && (
+								<span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-indigo-600 text-xs font-medium text-white">
+									{cartCount}
+								</span>
+							)}
 						</Link>
 
 						<button
