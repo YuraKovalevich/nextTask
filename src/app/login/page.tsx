@@ -1,70 +1,39 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import z from "zod";
+
+const loginSchema = z.object({
+	email: z.string().min(1, "Email is required").email("Invalid email address"),
+	password: z
+		.string()
+		.min(8, "Password must be at least 8 characters")
+		.refine((val) => !val.includes(" "), {
+			message: "Password must not contain spaces",
+		}),
+});
 
 type FormState = {
 	email: string;
 	password: string;
 };
 
-type ErrorsState = {
-	email: string;
-	password: string;
-};
-
-const validate = (name: keyof FormState, value: string): string => {
-	if (name === "email") {
-		if (!value.includes("@")) return "Email must contain @";
-	}
-
-	if (name === "password") {
-		if (value.includes(" ")) return "Password must not contain spaces";
-		if (value.length < 8) return "Password must be at least 8 characters";
-	}
-
-	return "";
-};
-
 const Page = () => {
 	const router = useRouter();
 
-	const [form, setForm] = useState<FormState>({
-		email: "",
-		password: "",
+	const {
+		register,
+		handleSubmit,
+		formState: { errors, isValid },
+	} = useForm<FormState>({
+		resolver: zodResolver(loginSchema),
+		mode: "onChange",
 	});
-
-	const [errors, setErrors] = useState<ErrorsState>({
-		email: "",
-		password: "",
-	});
-
-	const handleChange = (name: keyof FormState, value: string) => {
-		setForm((prev) => ({ ...prev, [name]: value }));
-		setErrors((prev) => ({
-			...prev,
-			[name]: validate(name, value),
-		}));
-	};
-
-	const handleSubmit = (e: React.FormEvent) => {
-		e.preventDefault();
-
-		const newErrors: ErrorsState = {
-			email: validate("email", form.email),
-			password: validate("password", form.password),
-		};
-
-		setErrors(newErrors);
-
-		const isValid = !newErrors.email && !newErrors.password;
-		if (!isValid) return;
-
+	const onSubmit = (values: FormState) => {
 		router.push("/");
 	};
-
-	const isValid =
-		form.email && form.password && !errors.email && !errors.password;
 
 	return (
 		<div className="flex min-h-screen items-center justify-center bg-gray-50 px-6">
@@ -73,7 +42,7 @@ const Page = () => {
 					Login
 				</h1>
 
-				<form className="space-y-5" onSubmit={handleSubmit}>
+				<form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
 					<div>
 						<label
 							htmlFor="email"
@@ -84,8 +53,7 @@ const Page = () => {
 						<input
 							id="email"
 							type="email"
-							value={form.email}
-							onChange={(e) => handleChange("email", e.target.value)}
+							{...register("email")}
 							className={`mt-1 w-full rounded-md border px-3 py-2 outline-none
                 ${
 									errors.email
@@ -94,7 +62,9 @@ const Page = () => {
 								}`}
 						/>
 						{errors.email && (
-							<p className="mt-1 text-sm text-red-500">{errors.email}</p>
+							<p className="mt-1 text-sm text-red-500">
+								{errors.email.message}
+							</p>
 						)}
 					</div>
 
@@ -107,8 +77,7 @@ const Page = () => {
 						</label>
 						<input
 							type="password"
-							value={form.password}
-							onChange={(e) => handleChange("password", e.target.value)}
+							{...register("password")}
 							className={`mt-1 w-full rounded-md border px-3 py-2 outline-none
                 ${
 									errors.password
@@ -117,7 +86,9 @@ const Page = () => {
 								}`}
 						/>
 						{errors.password && (
-							<p className="mt-1 text-sm text-red-500">{errors.password}</p>
+							<p className="mt-1 text-sm text-red-500">
+								{errors.password.message}
+							</p>
 						)}
 					</div>
 
@@ -127,7 +98,7 @@ const Page = () => {
 						className={`w-full rounded-md py-2 font-semibold text-white transition
               ${
 								isValid
-									? "bg-indigo-600 hover:bg-indigo-500"
+									? "cursor-pointer bg-indigo-600 hover:bg-indigo-500"
 									: "cursor-not-allowed bg-gray-300"
 							}`}
 					>
