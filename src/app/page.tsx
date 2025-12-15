@@ -34,7 +34,7 @@ export default async function Home(props: Props) {
 
 	const res = await fetch(
 		`https://dummyjson.com/products?limit=${ITEMS_PER_PAGE}&skip=${skip}`,
-		{ next: { revalidate: 60 } },
+		{ cache: "no-store" },
 	);
 
 	if (!res.ok) {
