@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { Suspense } from "react";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa6";
 import { useCartStore } from "@/src/app/store/useCartStore";
@@ -26,7 +27,9 @@ const Header = () => {
 					</div>
 
 					<div className="hidden flex-1 max-w-md px-8 lg:block">
-						<SearchInput />
+						<Suspense fallback={null}>
+							<SearchInput />
+						</Suspense>
 					</div>
 
 					<div className="flex items-center gap-4">
