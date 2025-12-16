@@ -27,15 +27,17 @@ type Props = {
 
 export default async function Home(props: Props) {
 	const searchParams = await normalizeSearchParams(props.searchParams);
+	const query = searchParams?.q?.toString() ?? "";
 	const currentPage = parsePage(searchParams);
 
 	const ITEMS_PER_PAGE = 9;
 	const skip = (currentPage - 1) * ITEMS_PER_PAGE;
 
-	const res = await fetch(
-		`https://dummyjson.com/products?limit=${ITEMS_PER_PAGE}&skip=${skip}`,
-		{ cache: "no-store" },
-	);
+	const url = query
+		? `https://dummyjson.com/products/search?q=${query}&limit=${ITEMS_PER_PAGE}&skip=${skip}`
+		: `https://dummyjson.com/products?limit=${ITEMS_PER_PAGE}&skip=${skip}`;
+
+	const res = await fetch(url, { cache: "no-store" });
 
 	if (!res.ok) {
 		throw new Error(`Products fetch failed: ${res.status} ${res.statusText}`);
@@ -54,11 +56,18 @@ export default async function Home(props: Props) {
 			</header>
 
 			<section className="mb-8">
-				<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-					{products.map((product: Product) => (
-						<ProductCard key={product.id} product={product} />
-					))}
-				</div>
+				{!products.length ? (
+					<div className="flex flex-col items-center justify-center py-20 text-center">
+						<h2 className="mb-2 text-3xl font-bold text-gray-800">NOT FOUND</h2>
+						<p className="text-gray-500">No products found for "{query}"</p>
+					</div>
+				) : (
+					<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+						{products.map((product: Product) => (
+							<ProductCard key={product.id} product={product} />
+						))}
+					</div>
+				)}
 			</section>
 
 			<Pagination

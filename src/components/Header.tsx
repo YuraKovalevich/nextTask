@@ -2,9 +2,9 @@
 import Link from "next/link";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa6";
-import { IoSearchOutline } from "react-icons/io5";
 import { useCartStore } from "@/src/app/store/useCartStore";
 import { useFavoriteStore } from "@/src/app/store/useFavoriteStore";
+import SearchInput from "@/src/components/SearchInput";
 
 const Header = () => {
 	const cartCount = useCartStore((state) =>
@@ -23,26 +23,10 @@ const Header = () => {
 						>
 							<span>Store</span>
 						</Link>
-
-						<div className="hidden items-center gap-6 md:flex">
-							<Link
-								href="/categories"
-								className="text-sm font-medium text-gray-700 transition-colors hover:text-indigo-600"
-							>
-								Categories
-							</Link>
-						</div>
 					</div>
 
 					<div className="hidden flex-1 max-w-md px-8 lg:block">
-						<div className="relative">
-							<IoSearchOutline className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-							<input
-								type="search"
-								placeholder="Search products..."
-								className="w-full rounded-lg border border-gray-200 bg-gray-50 py-2 pl-10 pr-4 text-sm focus:border-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-							/>
-						</div>
+						<SearchInput />
 					</div>
 
 					<div className="flex items-center gap-4">
